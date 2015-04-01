@@ -1,66 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+  <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/style.css">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Indie+Flower' rel='stylesheet' type='text/css'>
+ 
+  <script src="http://connect.soundcloud.com/sdk.js"></script>  
+ 
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+ 
+<!--  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css"> -->
   <meta charset="UTF-8">
   <title>Open Mic Chatroom</title>
-<!--   <link rel="stylesheet" type="text/css" href="style.css"> -->
+</head>
 
-  <!-- <style>
-      * { margin: 0; padding: 0; box-sizing: border-box; }
-      body { font: 13px Helvetica, Arial; }
-      form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-      form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #messages { list-style-type: none; margin: 0; padding: 0; }
-      #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #eee; }
+
+<header>
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <!-- <a class="navbar-brand" href="#">
+        <img alt="Brand" src="...">
+      </a> -->
+        <h1>OpenMic</h1>
+    </div>
+  </div>
+</nav>
+</header>
+
+<body>
+
+<div class="container">
 
     
-  </style> -->
-</head>
-<body>
-  <ul id="messages"></ul>
-    <form action="">
-      <input id="m" autocomplete="off" /> <button>Send</button>
+  <div class="row">
+<div class="musicians col-sm-6 col-md-4">
+
+<!--   <div class="col-sm-6 col-md-4"> -->
+    <!-- <div class="thumbnail musicians-box"> -->
+<!--       <img src="..." alt="..."> -->
+      <div class="caption">
+        <h2>Musicians Online</h2>
+        <p>
+          <div id="chatters">
+            
+          </div>
+        </p>
+        <!-- <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p> -->
+<!--     </div> -->
+  </div>
+</div>
+</div>
+
+
+
+<div class="chatroom col-sm-6 col-md-4">
+<div class="row">
+<!--   <div class="col-sm-6 col-md-4">
+ -->    <div class="thumbnail chatroom-box">
+     <!--  <img src="..." alt="..."> -->
+      <div class="caption">
+        <h3>Messages</h3>
+        <p>
+          <div id="messagesContainer"></div>
+    <form action="" id="chat_form">
+      <input id="info" autocomplete="off" /> 
+      <input type="submit" value="Submit">
     </form>
+        </p>
+      
+      </div>
+    </div>
+  </div>
+</div>
+</div>
 
+  
+<!--   <h3>Messages</h3>
+  <div id="messagesContainer"></div>
+    <form action="" id="chat_form">
+      <input id="info" autocomplete="off" /> 
+      <input type="submit" value="Submit">
+    </form> -->
+
+  <!-- SoundCloud Recording Feature -->
+    <div class="soundcloud-player">
+    <ul>
+    <div id="player">
+      <li id="startRecording"><a href="#">Start Recording</a></li>
+    </div>
+      <li id="stopRecording"><a href="#">Stop Recording</a></li>
+      <li id="playBack"><a href="#">Play Recorded Sound</a></li>
+      <li id="upload"><a href="#">Upload</a></li>
+    </ul>
+    <p class="status"></p>
+    <div class="audioplayer">
+      </div>
+    </div>
 <!--     <script src="/socket.io/socket.io.js"></script> -->
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    
+
+
+    </div>
+
     <script>
-      var server = io.connect('http://localhost:3000');
-      server.on('connect', function (data) {
-        $('#status').html('Connted to OpenMic');
-        username = prompt("What is your username?");
-
-        server.emit('join', username  );
+    $(document).ready(function() {
+      var trackUrl;
+      //establish connection
+      var socket = io.connect('http://localhost:3000'); 
+    
+      $('#chat_form').on('submit', function (e) {
+        e.preventDefault();
+        var message = $('#info').val();
+        socket.emit('messages', message);
+        $('#info').val('');
       });
 
-      var socket = io(); 
-
-      $('form').submit(function() {
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false; 
-
+      socket.on('messages', function (data) {
+        console.log("new message received");
+        $('#messagesContainer').append(data);
+        $('#messagesContainer').append('<br>');
+        
+         // insertMessage(data);
       });
 
-      socket.on('chat message', function (msg) {
-       
-        $('#messages').append($('<li>').text(msg));
-         insertMessage(data);
-      });
-
-      socket.on('add chatter', function (name) {
-        var chatter = $('<li>' +name+ '</li>').data('name', name);
+      socket.on('add_chatter', function (name) {
+        var chatter = $('<li>' + name + '</li>').data('name', name);
         $('#chatters').append(chatter);
+      });
+
+      // //Embed SoundCloud player in the chat 
+      // socket.on('track', function (track) {
+      //   console.log("new track", track);
+      //   SC.oEmbed(track, {auto_play: true}, function (oEmbed) {
+      //     console.log('oEmbed response: ' + oEmbed);
+      //   });
+        // SC.stream(track, function (sound) {
+        //   console.log("streaming", sound);
+        //   sound.play();
+        // });
+
+      
+
+    
+
+      // // socket.on('remove chatter', function (name) {
+      // //   $('#chatters li[data-name=]' + name + ']').remove();
+      // });
+
+      //SOUNDCLOUD RECORDING FEATURE
+      function updateTimer(ms) {
+      // update the timer text. Used when user is recording
+        $('.status').text(SC.Helper.millisecondsToHMS(ms));
+      }
+
+      //Connecting with SoundCloud
+      console.log("calling SoundCloud initialize");
+      SC.initialize({
+        client_id: "976d99c7318c9b11fdbb3f9968d79430",
+        redirect_uri: "http://localhost:3000/auth/soundcloud/callback"
+      });
+
+
+      SC.connect(function() {
+        SC.record({
+          start: function() {
+            window.setTimeout(function() {
+              SC.recordStop();
+              SC.recordUpload({
+                track: { title: 'This is my sound' }
+              });
+            }, 5000);
+          }
+        });
+        //Adds SoundCloud username to chat app
+        console.log("connected to SoundCloud");
+        
+        SC.get('/me', function(me) { 
+          console.log("me", me);
+          socket.emit('join', me.username); 
+        });
+
+        SC.get('/me/tracks', {}, function(tracks) {
+          var myTracks = $("<div>");
+          var heading = $("<h1>").text("Your tracks");
+          var list = $("<ul>");
+          tracks.forEach(function (single) {
+            var listItem = $("<li>").text(single.permalink);
+            listItem.on("click", function () {
+               SC.oEmbed(single.permalink_url, {
+                auto_play: true
+              }, function(oEmbed) {
+                console.log("oEmbed", oEmbed);
+                $('.status').html(oEmbed.html);
+              });
+            });
+            list.append(listItem);
+          });
+          $("body").append(myTracks.append(heading, list));
+        });
+
+        // username = prompt("What is your username?");
+        // socket.emit('join', username);   
+      // });
+
+
+        //Start recording link 
+      $('#startRecording a').click(function (e) {
+          $('#startRecording').hide();
+          $('#stopRecording').show();
+          e.preventDefault();
+          SC.record({
+            progress: function(ms, avgPeak) {
+                updateTimer(ms);
+            }
+          });
+      });
+
+      //Stop Recording link
+      $('#stopRecording a').click(function (e) {
+        e.preventDefault();
+        $('#stopRecording').hide();
+        $('#playBack').show();
+        $('upload').show();
+        SC.recordStop();
+      });
+
+      //Playback recording link
+      $('#playBack a').click(function (e) {
+        e.preventDefault();
+        updateTimer(0);
+        SC.recordPlay({
+          progress: function (ms) {
+            updateTimer(ms);
+          }
+        });
+      });
+
+      //Uploaded SoundCloud Track after recorded
+      $('#upload').click(function (e) {
+          e.preventDefault();
+          SC.connect({
+            connected: function() {
+              console.log("CONNECTED");
+              $('.status').html("Uploading...");
+              SC.recordUpload({
+                track: {
+                  title: 'My Recording',
+                  sharing: 'public'
+                }
+              }, 
+                //When uploaded track, provides link user, but not everyone
+              function (track) {
+
+                // console.log("TRACK", track);
+
+                setTimeout(function () {
+                  SC.oEmbed(track.permalink_url, {auto_play: true}, function(oEmbed) {
+                    console.log("THIS IS oEMBED", oEmbed);
+                    // console.log(oEmbed.html);
+                    socket.emit('messages', oEmbed.html );
+                    $('.status').html(oEmbed.html);
+                  });
+                }, 8000);
+                // $('.status').html("Uploaded: <a href='" + track.permalink_url + "'>" + track.permalink_url + "</a>");
+              });
+            }
+          });
+      });
+
     });
 
-        server.on('remove chatter', function (name) {
-      $('#chatters li[data-name=]' + name + ']').remove();
-    });
-
+  });
 
     </script>
 </body>
+  
 </html>

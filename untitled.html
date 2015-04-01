@@ -1,0 +1,42 @@
+<form action="javascript:void(0)" id="chat_form">
+  <input type="text" name="info" id="info">
+  <input type="submit" value="Submit">
+</form>
+
+<h2>Here are the chatters!</h2>
+<div id="chatters">
+
+</div>
+
+<h2>Here are my messages!</h2>
+<div id="messagesContainer">
+
+</div>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src = "/socket.io/socket.io.js"></script>
+
+<script>
+  $(document).ready(function(){
+    var socket = io.connect('http://localhost:8080');
+    nickname = prompt("whats yo name?");
+    socket.emit('join', nickname);
+
+    $("#chat_form").on('submit', function(e){
+      e.preventDefault();
+      var message = $("#info").val();
+      socket.emit('messages',message)
+      $("#info").val("");
+    });
+  socket.on('messages', function(data){
+    $("#messagesContainer").append("<br>" + data);
+  });
+  socket.on('add_chatter', function(name){
+    console.log("CHATTER ADDED!")
+    var chatter = $("<li>" + name + "</li>").data("name",name);
+    $("#chatters").append(chatter)
+  });
+  socket.on("remove chatter", function(name){
+    $("#chatters li[data-name=" + name +"]").remove()
+  });
+});
+</script>
