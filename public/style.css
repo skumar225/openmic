@@ -1,13 +1,21 @@
-/*.soundwave {
+/*/*/*/*.soundwave {
   background-image: url('waveimage.jpg');
   background-image: 
 }*/
 
-h1, h2, h3 {
-  font-family: 'Bree Serif', serif; 
+body {
+  background: url('microphone.svg') no-repeat center center fixed;
+    background-position: 4% 100%;
 }
 
+h1, h2, h3 {
+  font-family: 'Bree Serif', serif; 
 
+}
+
+h2 {
+  text-align: center;
+}
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -17,35 +25,62 @@ h1 {
   color: white;
   padding-left: 5%;
   padding-bottom: 5%;
+  letter-spacing: 4px;
 }
 
 .navbar-default {
   background-color: #000000;
-}
-
-.musicians-box {
-  float: left;
-  width: 290px;
-  height: 350px;
-  margin-left: 25%;
-  margin-top: 10%;
-}
-
-.chatroom-box {
-
-  display: inline-block;
-  height: 350px;
-  width: 720px;
-  margin-left: 7%;
-  margin-top: 10%;
+ /* background-image: url('SoundWave.jpg');
+  background-position: center;
+  opacity: 0.8;*/
 }
 
 input, button, select, textarea {
   line-height: 3;
 }
-   
-#info {
-  margin: 15%; 
-} 
 
-  
+.chatroom, .musicians {
+
+  border-style: solid;
+  border-radius: 6%;
+  border-color: black;
+  margin-left: 20px;
+  height: 500px;
+  background-color: #F2F2F2;
+  opacity: 0.8;
+}
+
+.musicians {
+  height: fixed;
+}
+
+input#info {
+/*  margin: 44% 1%;
+*/  width: 656px;
+  border-radius: 10%;
+}
+
+#chat_form {
+  margin-top: 45%;
+  margin-left: 3%;
+}
+
+.visualSoundContainer__teaser {
+  height: 100px;
+}
+
+.row {
+  padding-top: 2%;
+}
+
+.player {
+  text-align: center;
+}
+
+/*.player ul li {
+  z-index: 30;
+}*/
+.player ul li a {
+  z-index: 40;
+  cursor: pointer;
+}*/*/*/

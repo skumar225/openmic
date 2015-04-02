@@ -3,7 +3,7 @@
 <head>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
   
-   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+   <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script> -->
   <link href='http://fonts.googleapis.com/css?family=Bree+Serif' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" href="/style.css">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
@@ -39,7 +39,8 @@
 
     
   <div class="row">
-<div class="musicians col-sm-6 col-md-4">
+<div class="musicians col-sm-3 col-md-3">
+<!-- <div class="musicians col-sm-6 col-md-4"> -->
 
 <!--   <div class="col-sm-6 col-md-4"> -->
     <!-- <div class="thumbnail musicians-box"> -->
@@ -55,29 +56,32 @@
 <!--     </div> -->
   </div>
 </div>
-</div>
 
 
 
-<div class="chatroom col-sm-6 col-md-4">
-<div class="row">
-<!--   <div class="col-sm-6 col-md-4">
- -->    <div class="thumbnail chatroom-box">
+<div class="chatroom col-sm-8 col-md-8">
+<!-- <div class="chatroom col-sm-6 col-md-4">
+ --><!--   <div class="col-sm-6 col-md-4">-->    
+<!-- <div class="thumbnail chatroom-box"> -->
      <!--  <img src="..." alt="..."> -->
       <div class="caption">
-        <h3>Messages</h3>
-        <p>
-          <div id="messagesContainer"></div>
-    <form action="" id="chat_form">
+        <h2>Messages</h2>
+        
+        <div id="messagesContainer"></div>
+   
+
+   
+        
+      
+     <!--  </div> -->
+    </div>
+        <form action="" id="chat_form">
       <input id="info" autocomplete="off" /> 
       <input type="submit" value="Submit">
     </form>
-        </p>
-      
-      </div>
-    </div>
   </div>
 </div>
+
 </div>
 
   
@@ -89,18 +93,36 @@
     </form> -->
 
   <!-- SoundCloud Recording Feature -->
+  <div class="row player">
     <div class="soundcloud-player">
     <ul>
     <div id="player">
+     <!--  <button type="button" id="startRecording" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-record" aria-hidden="true"></span>
+      </button> -->
       <li id="startRecording"><a href="#">Start Recording</a></li>
     </div>
+
+    <!--  <button type="button" id="stopRecording" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-stop" aria-hidden="true"></span>
+      </button> -->
       <li id="stopRecording"><a href="#">Stop Recording</a></li>
+
+ <!--       <button type="button" id="playBack" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+      </button> -->
       <li id="playBack"><a href="#">Play Recorded Sound</a></li>
+
+   <!--    <button type="button" id="upload" class="btn btn-default btn-lg">
+        <span class="glyphicon glyphicon-open" aria-hidden="true"></span>
+      </button> -->
       <li id="upload"><a href="#">Upload</a></li>
     </ul>
     <p class="status"></p>
     <div class="audioplayer">
       </div>
+    </div>
+
     </div>
 <!--     <script src="/socket.io/socket.io.js"></script> -->
     
@@ -109,6 +131,7 @@
     </div>
 
     <script>
+
     $(document).ready(function() {
       var trackUrl;
       //establish connection
@@ -186,27 +209,27 @@
           socket.emit('join', me.username); 
         });
 
-        SC.get('/me/tracks', {}, function(tracks) {
-          var myTracks = $("<div>");
-          var heading = $("<h1>").text("Your tracks");
-          var list = $("<ul>");
-          tracks.forEach(function (single) {
-            var listItem = $("<li>").text(single.permalink);
-            listItem.on("click", function () {
-               SC.oEmbed(single.permalink_url, {
-                auto_play: true
-              }, function(oEmbed) {
-                console.log("oEmbed", oEmbed);
-                $('.status').html(oEmbed.html);
-              });
-            });
-            list.append(listItem);
-          });
-          $("body").append(myTracks.append(heading, list));
-        });
+      //   SC.get('/me/tracks', {}, function(tracks) {
+      //     var myTracks = $("<div>");
+      //     var heading = $("<h1>").text("Your tracks");
+      //     var list = $("<ul>");
+      //     tracks.forEach(function (single) {
+      //       var listItem = $("<li>").text(single.permalink);
+      //       listItem.on("click", function () {
+      //          SC.oEmbed(single.permalink_url, {
+      //           auto_play: true
+      //         }, function(oEmbed) {
+      //           console.log("oEmbed", oEmbed);
+      //           $('.status').html(oEmbed.html);
+      //         });
+      //       });
+      //       list.append(listItem);
+      //     });
+      //     $("body").append(myTracks.append(heading, list));
+      //   });
 
-        // username = prompt("What is your username?");
-        // socket.emit('join', username);   
+      //   username = prompt("What is your username?");
+      //   socket.emit('join', username);   
       // });
 
 
@@ -277,6 +300,7 @@
     });
 
   });
+
 
     </script>
 </body>
